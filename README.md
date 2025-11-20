@@ -1,2 +1,2 @@
 # MetaCognition
-An explorration into synthetic metacognition
+An exploration into synthetic metacognition
