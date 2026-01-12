@@ -1,6 +1,6 @@
 # Synthetic Metacognition: Deep Learning Systems with Introspective Self-Awareness
 
-**Anonymous Authors**  
+**Ismail Haddou**  
 *Under Review for Nature Machine Intelligence / NeurIPS 2026*
 
 ---
