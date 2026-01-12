@@ -1,0 +1,74 @@
+Synthetic Metacognition and Self■Reflective AI Systems
+(v0.3)
+Author: Ismail Haddou
+Nu Terra Labs Ltd.
+Correspondence: ismail@nuterralabs.com
+Abstract:
+This paper introduces a validated framework for synthetic metacognition: a triadic neural system comprising a
+base learner, a meta■monitor, and a meta■controller that enables self■observation and adaptive inference.
+We integrate reproducible NumPy, scikit■learn, and PyTorch implementations demonstrating improved
+calibration and uncertainty■aware selective prediction using additive and temperature controllers. Empirical
+validation across synthetic and real datasets shows measurable gains: 2–3% lower negative log■likelihood
+(NLL), 20–40% lower expected calibration error (ECE), and improved area under risk■coverage (AURC)
+metrics. All code and figures are provided in the open release package
+synthetic_metacognition_release_v0_3.zip.
+1. Introduction
+Humans continuously evaluate their own reasoning processes, revising beliefs and strategies when uncertain.
+Standard neural networks output predictions without introspection. Meta■learning approaches such as
+Model■Agnostic Meta■Learning (MAML) enable inter■task adaptation, and Bayesian dropout provides
+post■hoc uncertainty estimation, but neither supports intra■instance reflection. Synthetic metacognition closes
+this gap by enabling a network to observe its hidden states, assess confidence, and adapt inference in
+real■time. This version expands the mathematical validation and provides reproducible experiments confirming
+that properly regularized controllers yield significant improvements in calibration and selective■risk
+performance.
+2. Synthetic Metacognitive Architecture
+The architecture forms a closed loop of three interacting modules: Base learner f_θ(x): produces logits z and
+hidden states h. Meta■monitor m_φ(h,z): estimates correctness probability q = σ(ψ(u)). Meta■controller
+c_ψ(u): adjusts z via either multiplicative, additive, or temperature control. The additive controller z' = z + r, with
+bounded residual r = W u, stabilizes calibration, while the temperature controller z' = z / τ (τ ∈ [0.7, 3.0])
+adaptively rescales confidence. The training objective jointly minimizes task cross■entropy and proper scoring
+loss for uncertainty, with optional regularization enforcing g≈1 or τ≈1 for stability.
+Table 1: Synthetic and PyTorch results comparing controllers on calibration and risk■coverage metrics.
+Model Accuracy NLL ↓ ECE ↓ AURC ↓
+Baseline (no controller) 0.705 0.582 0.014 0.092
+Multiplicative 0.705 0.583 0.037 0.095
+Additive (ours) 0.726 0.564 0.010 0.081
+Temperature (ours) 0.728 0.561 0.008 0.078
+3. Mathematical Validation
+For a binary classification logit z adjusted by gate g ∈ (0,1), with prediction p = σ(gz), the gradient of the
+cross■entropy loss with respect to g is analytically derived as ∂L/∂g = (p − y)z. Finite■difference checks across
+random samples confirm this identity with a maximum absolute error of 1.6×10■¹■. This confirms that the
+multiplicative controller behaves as an adaptive scaling mechanism for logits, attenuating uncertain predictions
+and amplifying reliable ones.
+4. Empirical Results
+Three implementations were evaluated: NumPy synthetic benchmark: baseline logistic regression with
+monitor■based gating. scikit■learn implementation: two■layer logistic classifiers with additive and
+temperature control. PyTorch CNN on MNIST: convolutional base learner, small feedforward monitor,
+controller head. Key findings: Multiplicative gating shows no gain and worsens calibration. Additive and
+temperature controllers reduce NLL by 2–3% and ECE by 20–40%. Selective prediction improves AURC while
+preserving accuracy. All experiments are fully reproducible using the provided code and configuration files.
+5. Discussion
+These experiments validate that metacognitive modulation can improve reliability when properly regularized.
+The additive and temperature controllers generalize better, preventing the collapse seen in multiplicative gates.
+The monitor’s uncertainty estimates serve as effective confidence scores for error detection and selective
+prediction. The results align with theoretical expectations of adaptive introspection: by training the controller and
+monitor jointly, the network achieves consistent internal uncertainty calibration.
+6. Reproducibility and Code Availability
+All scripts, datasets, and configuration files are included in the public release archive
+synthetic_metacognition_release_v0_3.zip. The archive includes NumPy, scikit■learn, and PyTorch
+experiments, along with utilities for calibration (ECE), NLL, error detection AUROC, and risk■coverage
+(AURC). Each script logs metrics to JSON and saves plots in ./artifacts. Random seeds are fixed to ensure
+deterministic reproduction.
+7. Conclusion and Future Work
+We present the first empirically validated implementation of synthetic metacognition demonstrating real
+calibration improvements. Additive and temperature controllers outperform multiplicative gates and provide
+stable, interpretable modulation. Future research includes reinforcement■learning agents that self■adjust
+exploration policies using internal confidence, and theoretical work linking these results to reflective logics and
+self■modifying agents.
+References
+[1] C. Finn, P. Abbeel, and S. Levine. Model■Agnostic Meta■Learning for Fast Adaptation of Deep Networks.
+arXiv:1703.03400 (2017).
+[2] Y. Gal and Z. Ghahramani. Dropout as a Bayesian Approximation: Representing Model Uncertainty in Deep
+Learning. ICML (2016).
+[3] ACT■R Cognitive Architecture. Wikipedia. https://en.wikipedia.org/wiki/ACT-R
+[4] Hutter, M., Schmidhuber, J. The Gödel Machine: Self■Improving Universal Problem Solver. (2005).
